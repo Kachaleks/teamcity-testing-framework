@@ -1,15 +1,15 @@
 package com.example.teamcity;
 
-import com.example.teamcity.enums.Endpoint;
 import com.example.teamcity.models.BuildType;
 import com.example.teamcity.models.Project;
 import com.example.teamcity.models.User;
-import org.testng.annotations.Test;
-import com.example.teamcity.requests.checked.CheckedBase;
+import com.example.teamcity.requests.checked.CheckedRequests;
 import com.example.teamcity.spec.Specifications;
+import org.testng.annotations.Test;
 
 import java.util.Arrays;
 
+import static com.example.teamcity.enums.Endpoint.*;
 import static com.example.teamcity.generators.TestDataGenerator.generate;
 import static io.qameta.allure.Allure.step;
 
@@ -18,21 +18,19 @@ public class BuildTypeTest extends BaseApiTest {
     @Test(description = "User should be able to create build type", groups = {"Positive", "CRUD"})
     public void userCreatesBuildTypeTest() {
         var user = generate(User.class);
-        var userRequester = new CheckedBase<User>(Specifications.superUserSpec(), Endpoint.USERS);
-        userRequester.create(user);
+
+        superUserCheckRequests.getRequest(USERS).create(user);
+        var userCheckRequests = new CheckedRequests(Specifications.authSpec(user));
 
         var project = generate(Project.class);
 
-        var projectRequester = new CheckedBase<Project>(Specifications.authSpec(user), Endpoint.PROJECTS);
-        project = projectRequester.create(project);
+        project = userCheckRequests.<Project>getRequest(PROJECTS).create(project);
 
         var buildType = generate(Arrays.asList(project), BuildType.class);
 
-        var buildTypeRequester = new CheckedBase<BuildType>(Specifications.authSpec(user), Endpoint.BUILD_TYPES);
+        userCheckRequests.getRequest(BUILD_TYPES).create(buildType);
 
-        buildTypeRequester.create(buildType);
-
-        var createdBuildType = buildTypeRequester.read(buildType.getId());
+        var createdBuildType = userCheckRequests.<BuildType>getRequest(BUILD_TYPES).read(buildType.getId());
         softy.assertEquals(buildType.getName(), createdBuildType.getName(), "BuildType name is not correct");
     }
 
