@@ -1,4 +1,4 @@
-package com.example.demo;
+package com.example.teamcity;
 
 public class BaseApiTest extends BaseTest {
 }

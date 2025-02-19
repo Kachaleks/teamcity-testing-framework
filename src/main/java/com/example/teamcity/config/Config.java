@@ -1,4 +1,4 @@
-package config;
+package com.example.teamcity.config;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -25,8 +25,8 @@ public class Config {
 
     private void loadProperties(String fileName) {
         try (InputStream stream = Config.class.getClassLoader().getResourceAsStream(fileName)) {
-            if(stream==null){
-                System.out.println("File not found "+fileName);
+            if (stream == null) {
+                System.err.println("File not found " + fileName);
             }
             properties.load(stream);
         } catch (IOException e) {
@@ -35,7 +35,7 @@ public class Config {
         }
     }
 
-    public static String GetProperties(String key) {
+    public static String getProperty(String key) {
         return getConfig().properties.getProperty(key);
     }
 }
