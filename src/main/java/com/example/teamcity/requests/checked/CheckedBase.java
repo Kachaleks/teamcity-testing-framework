@@ -1,6 +1,7 @@
 package com.example.teamcity.requests.checked;
 
 import com.example.teamcity.enums.Endpoint;
+import com.example.teamcity.models.TestDataStorage;
 import io.restassured.specification.RequestSpecification;
 import com.example.teamcity.models.BaseModel;
 import org.apache.http.HttpStatus;
@@ -19,10 +20,13 @@ public final class CheckedBase<T extends BaseModel> extends Request implements C
 
     @Override
     public T create(BaseModel model) {
-        return (T) uncheckedBase
+        var createdModel = (T) uncheckedBase
                 .create(model)
                 .then().assertThat().statusCode(HttpStatus.SC_OK)
                 .extract().as(endpoint.getModelClass());
+
+        TestDataStorage.getStorage().addCreatedEntity(endpoint, createdModel);
+        return createdModel;
     }
 
     @Override

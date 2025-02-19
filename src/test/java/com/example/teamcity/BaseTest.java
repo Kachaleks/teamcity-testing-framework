@@ -1,6 +1,7 @@
 package com.example.teamcity;
 
 import com.example.teamcity.models.TestData;
+import com.example.teamcity.models.TestDataStorage;
 import com.example.teamcity.requests.checked.CheckedRequests;
 import com.example.teamcity.spec.Specifications;
 import org.testng.annotations.AfterMethod;
@@ -23,7 +24,8 @@ public class BaseTest {
     }
 
     @AfterMethod(alwaysRun = true)
-    public void AfterTest() {
+    public void afterTest() {
         softy.assertAll();
+        TestDataStorage.getStorage().deleteCreatedEntities();
     }
 }
