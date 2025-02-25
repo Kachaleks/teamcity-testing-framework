@@ -1,5 +1,6 @@
 package com.example.teamcity.models;
 
+import com.example.teamcity.annotations.Parameterizable;
 import com.example.teamcity.annotations.Random;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
@@ -17,5 +18,6 @@ public class Project extends BaseModel {
     private String id;
     @Random
     private String name;
+//    @Parameterizable
     private String locator;
 }
