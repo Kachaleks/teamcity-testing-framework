@@ -1,6 +1,8 @@
 package com.example.teamcity;
 
+import com.example.teamcity.generators.RandomData;
 import com.example.teamcity.models.BuildType;
+import com.example.teamcity.models.NewProjectDescription;
 import com.example.teamcity.models.Project;
 import com.example.teamcity.models.User;
 import com.example.teamcity.requests.checked.CheckedRequests;
@@ -33,18 +35,17 @@ public class ProjectTest extends BaseApiTest {
 
     @Test(description = "User should not be able to create project with not existing parent", groups = {"Negative", "CRUD"})
     public void userCreateProjectTest1() {
-        var rand = Math.random();
-        var projectWithNoParent = generate(Arrays.asList(testData.getProject()), Project.class, testData.getProject().getLocator() + rand);
+
+        var projectWithNoParent = generate(Arrays.asList(testData.getNewProjectDescription()), NewProjectDescription.class);
 
         superUserCheckRequests.getRequest(USERS).create(testData.getUser());
 
 //        var userCheckRequests = new CheckedRequests(Specifications.authSpec(testData.getUser()));
         new UncheckedBase(Specifications.authSpec(testData.getUser()), PROJECTS)
                 .create(projectWithNoParent)
-                .then().assertThat().statusCode(HttpStatus.SC_BAD_REQUEST)
-                .body(Matchers.containsString("No project found by name or internal/external id '_Root'" + rand + "\n" +
-                        "Could not find the entity requested. Check the reference is correct and the user has permissions to access the entity."));
-
+                .then().assertThat().statusCode(HttpStatus.SC_NOT_FOUND)
+                .body(Matchers.containsString("No project found by name or internal/external id '%s'.\n".formatted(projectWithNoParent.getParentProject().getLocator())
+                        + "Could not find the entity requested. Check the reference is correct and the user has permissions to access the entity"));
     }
 
     @Test(description = "Creating project with existing projectId", groups = {"Negarive", "CRUD"})

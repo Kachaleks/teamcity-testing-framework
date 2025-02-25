@@ -10,7 +10,7 @@
 GET http://admin:admin@{{host}}:8111/app/rest/projects/
 Accept: application/json
 
-### 1. Create project
+### 1. Create project1
 # @no-cookie-jar
 
 POST http://{{user}}:{{password}}@{{host}}:8111/app/rest/projects/
@@ -19,11 +19,23 @@ Accept: application/json
 
 {
   "parentProject": {
-    "locator": "_Root1234"
+    "locator": null
   },
   "name": "{{projectId}}",
   "id": "{{projectId}}",
   "copyAllAssociatedSettings": true
+}
+### 1. Create project 2
+# @no-cookie-jar
+POST http://{{user}}:{{password}}@{{host}}:8111/app/rest/projects/
+Content-Type: application/json
+Accept: application/json
+
+{
+    "locator": null,
+  "name": "{{projectId}}",
+  "id": "{{projectId}}"
+
 }
 
 ### 2. Create build configuration
