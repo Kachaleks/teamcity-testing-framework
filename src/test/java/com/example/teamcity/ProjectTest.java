@@ -54,7 +54,7 @@ public class ProjectTest extends BaseApiTest {
     public void userCantCreateProjectWithSameNameTest() {
         superUserCheckRequests.getRequest(USERS).create(testData.getUser());
         new CheckedRequests(Specifications.authSpec(testData.getUser())).getRequest(PROJECTS).create(testData.getProject());
-        var projectWithSameName = generate(Arrays.asList(testData.getProject()),Project.class, testData.getProject().getId(),testData.getProject().getName());
+        var projectWithSameName = generate(Arrays.asList(testData.getProject()), Project.class, testData.getProject().getId(), testData.getProject().getName());
         new UncheckedBase(Specifications.authSpec(testData.getUser()), PROJECTS)
                 .create(projectWithSameName)
                 .then().assertThat().statusCode(HttpStatus.SC_BAD_REQUEST)
